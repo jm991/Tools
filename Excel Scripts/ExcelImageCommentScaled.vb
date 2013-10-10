@@ -18,7 +18,7 @@ With Application.FileDialog(msoFileDialogFilePicker)
     .AllowMultiSelect = False          'Only one file
     .InitialFileName = CurDir         'directory to open the window
     .Filters.Clear                    'Cancel the filter
-    .Filters.Add Description:="Images", Extensions:="*.jpg,*.png", Position:=1
+    .Filters.Add Description:="Images", Extensions:="*.jpg,*.png,*.gif", Position:=1
     .Title = "Choose image"
           
     If .Show = -1 Then TheFile = .SelectedItems(1) Else TheFile = 0
