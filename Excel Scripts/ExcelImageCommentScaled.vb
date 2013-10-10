@@ -1,4 +1,4 @@
-Sub Img_in_Commentbox()
+Sub ImgInCommentbox()
 
 'Excel Image Comment (Scaled) Cell Script
 'John McElmurray
@@ -32,7 +32,7 @@ End If
 
 'Create the new comment
 Range(ActiveCell.Address).AddComment
-Range(ActiveCell.Address).Comment.Visible = True
+Range(ActiveCell.Address).Comment.Visible = False
 
 'Get a ref to comment and add the picture file as a backgroudn
 Set shp = [ActiveCell].Comment.Shape
@@ -107,8 +107,10 @@ shp.height = newheight
 'Lock ratio only after sizes are set proper
 shp.LockAspectRatio = msoTrue
 
-'Write width and height into cell comment for future resizing
-ActiveCell.Comment.Text ("" & newwidth & "x" & newheight)
+'Write width and height into cell comment's Alt Text for future resizing
+Dim dimstr As String
+dimstr = "" & newwidth & "x" & newheight
+ActiveCell.Comment.Shape.AlternativeText = dimstr
 
 End Sub
 
@@ -138,7 +140,7 @@ End If
 
 For Each mycell In commrange
     Dim clean As String
-    clean = mycell.Comment.Text
+    clean = mycell.Comment.Shape.AlternativeText
     
     If InStr(clean, "x") <> 0 Then
         'Unlock ratio in order to properly resize
