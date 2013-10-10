@@ -6,6 +6,10 @@ Sub Img_in_Commentbox()
 'Performs proper aspect ratio scaling of image (to max of 300 px, constant in script)
 'Select the cell you wish to comment with an image and run the script
 
+'Max size of an image comment
+Dim maxval As Double
+maxval = 300
+
 'Remove any old comment before adding the new one
 Application.ActiveCell.ClearComments
 
@@ -78,10 +82,23 @@ End If
 
 'Relative resize of picture
 Dim newwidth As Double
-newwidth = 300
+newwidth = width
+Dim newheight As Double
+newheight = height
 Dim aspect As Double
-aspect = width / newwidth
-newheight = height / aspect
+
+'Only scale if largest dimension greater than maxval px
+If width > maxval Or height > maxval Then
+    If width > height Then
+        newwidth = maxval
+        aspect = width / newwidth
+        newheight = height / aspect
+    Else
+        newheight = maxval
+        aspect = height / newheight
+        newwidth = width / aspect
+    End If
+End If
 
 ' Set width and height
 shp.width = newwidth
@@ -91,3 +108,5 @@ shp.height = newheight
 shp.LockAspectRatio = msoTrue
 
 End Sub
+
+
