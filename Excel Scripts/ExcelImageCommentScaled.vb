@@ -100,13 +100,60 @@ If width > maxval Or height > maxval Then
     End If
 End If
 
-' Set width and height
+'Set width and height
 shp.width = newwidth
 shp.height = newheight
 
-' Lock ratio only after sizes are set proper
+'Lock ratio only after sizes are set proper
 shp.LockAspectRatio = msoTrue
+
+'Write width and height into cell comment for future resizing
+ActiveCell.Comment.Text ("" & newwidth & "x" & newheight)
 
 End Sub
 
+
+Sub RestoreImageCommentSize()
+
+'Method to quickly resize cells back to their proper dimensions
+'Spreadsheet sometimes reflows them and messes things up
+
+Application.ScreenUpdating = False
+
+Dim commrange As Range
+Dim mycell As Range
+Dim curwks As Worksheet
+
+Set curwks = ActiveSheet
+
+On Error Resume Next
+Set commrange = curwks.Cells _
+    .SpecialCells(xlCellTypeComments)
+On Error GoTo 0
+
+If commrange Is Nothing Then
+    MsgBox "no comments found"
+    Exit Sub
+End If
+
+For Each mycell In commrange
+    Dim clean As String
+    clean = mycell.Comment.Text
+    
+    If InStr(clean, "x") <> 0 Then
+        Dim width As Integer
+        If IsNumeric(Split(clean, "x")(0)) Then
+            mycell.Comment.Shape.width = CInt(Split(clean, "x")(0))
+        End If
+            
+        Dim height As Integer
+        If IsNumeric(Split(clean, "x")(1)) Then
+            mycell.Comment.Shape.height = CInt(Split(clean, "x")(1))
+        End If
+    End If
+Next mycell
+
+Application.ScreenUpdating = True
+
+End Sub
 
