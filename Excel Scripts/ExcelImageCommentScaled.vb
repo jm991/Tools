@@ -32,7 +32,7 @@ End If
 
 'Create the new comment
 Range(ActiveCell.Address).AddComment
-Range(ActiveCell.Address).Comment.Visible = False
+Range(ActiveCell.Address).Comment.Visible = True
 
 'Get a ref to comment and add the picture file as a backgroudn
 Set shp = [ActiveCell].Comment.Shape
@@ -141,6 +141,9 @@ For Each mycell In commrange
     clean = mycell.Comment.Text
     
     If InStr(clean, "x") <> 0 Then
+        'Unlock ratio in order to properly resize
+        mycell.Comment.Shape.LockAspectRatio = msoFalse
+        
         Dim width As Integer
         If IsNumeric(Split(clean, "x")(0)) Then
             mycell.Comment.Shape.width = CInt(Split(clean, "x")(0))
@@ -150,6 +153,8 @@ For Each mycell In commrange
         If IsNumeric(Split(clean, "x")(1)) Then
             mycell.Comment.Shape.height = CInt(Split(clean, "x")(1))
         End If
+        'Lock it back
+        mycell.Comment.Shape.LockAspectRatio = msoTrue
     End If
 Next mycell
 
