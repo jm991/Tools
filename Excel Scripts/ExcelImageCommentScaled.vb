@@ -10,9 +10,6 @@ Sub ImgInCommentbox()
 Dim maxval As Double
 maxval = 300
 
-'Remove any old comment before adding the new one
-Application.ActiveCell.ClearComments
-
 'Pop the file picker
 With Application.FileDialog(msoFileDialogFilePicker)
     .AllowMultiSelect = False          'Only one file
@@ -29,6 +26,9 @@ If TheFile = 0 Then
     MsgBox ("No image selected")
     Exit Sub
 End If
+
+'Remove any old comment before adding the new one
+Application.ActiveCell.ClearComments
 
 'Create the new comment
 Range(ActiveCell.Address).AddComment
