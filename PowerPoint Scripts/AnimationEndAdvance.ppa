@@ -1,0 +1,60 @@
+'VBAProject -> Modules -> Module1
+'This file is a Module
+
+'PowerPoint Advance Slide On Animation End Script
+'John McElmurray
+'johnmce@microsoft.com
+'Description:
+'   Transitions to the next slide once all of the animations on the current slide have completed.
+'   Surprisingly, there is no default behaviour for this in PowerPoint, but it can easily be scripted using slide events.
+'   This script is especially useful for clickthroughs containing animations of user actions, since animation of a
+'   pointer/cursor should end the slide, rather than having to click again
+'Usage:
+'   Attach the main method to a shape on the first slide
+'   Insert -> Shape -> (choose a shape), select shape, -> Insert -> Action -> Run macro: -> main -> OK
+
+Public myApp As Class1
+ 
+Sub main()
+    'Create the appEvents class
+    Set myApp = New Class1
+    
+    'Advance show to next slide
+    SlideShowWindows(1).View.GotoSlide (ActivePresentation.SlideShowWindow.View.Slide.SlideIndex + 1)
+End Sub
+
+
+
+'VBAProject -> Class Modules -> Class1
+'This file is a Class Module
+ 
+Dim WithEvents app As Application
+Dim i As Long
+ 
+Private Sub Class_Initialize()
+    Set app = Application
+    i = 0
+End Sub
+ 
+Private Sub app_SlideShowNextBuild(ByVal Wn As SlideShowWindow)
+    'Catch app's SlideShowNextBuild event
+    Dim t As Date
+    Dim wait As Integer
+     
+    t = Now()
+    i = i + 1
+    If i = Wn.Presentation.Slides(Wn.View.CurrentShowPosition).TimeLine.MainSequence.Count Then
+        i = 0
+        If wait > 0 Then
+            Do
+                 'nothing for 'wait' seconds
+            Loop Until Now() > DateAdd("s", wait, t)
+        End If
+        
+        'Go to next slide
+        Wn.View.Next
+    ElseIf i > Wn.Presentation.Slides(Wn.View.CurrentShowPosition).TimeLine.MainSequence.Count Then
+        'Reset i if you've gone over the count - this usually means slides in between didn't have animations, but still incremented i
+        i = 0
+    End If
+End Sub
