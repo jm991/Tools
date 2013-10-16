@@ -58,3 +58,8 @@ Private Sub app_SlideShowNextBuild(ByVal Wn As SlideShowWindow)
         i = 0
     End If
 End Sub
+
+Private Sub app_SlideShowNextSlide(ByVal Wn As SlideShowWindow)
+    'Make sure each slide gets a fresh i
+    i = 0
+End Sub
